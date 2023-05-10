@@ -16,8 +16,10 @@
         tenancy: default
         state: "{{state}}"
       register: vpcout
-    - debug:
-      var: vpcout
+
+    - name: Debug VPC output
+      debug:
+        var: vpcout
 
     - name: Create Public subnet 1 in Zone1
       ec2_vpc_subnet:
@@ -30,4 +32,3 @@
         resource_tags:
           Name: vprofile-pubsub1
       register: pubsub1_out
-
