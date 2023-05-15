@@ -73,7 +73,7 @@
         region: "{{region}}"
         instance_type: t2.micro
         image: "{{nginx_ami}}"
-        wait: yes
+        wait_timeout: yes
         wait_time: 300
         instance_tags:
           Name: "web01"
