@@ -9,7 +9,7 @@
 
     - name: Import vprofile setup Variable
       include_vars:
-        file: vars/vprostacksetup.yml
+        file: vars/vprostacksetup
 
     - name: Create Vprofile Key
       ec2_key:
