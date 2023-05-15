@@ -4,20 +4,22 @@
   gather_facts: no
   tasks:
     - name: Import VPC setup Variable
-      include_vars: vars/vpc-output_vars
+      include_vars:
+        file: vars/vpc-output_vars.yml
 
     - name: Import vprofile setup Variable
-      include_vars: vars/vprostacksetup
+      include_vars:
+        file: vars/vprostacksetup.yml
 
     - name: Create Vprofile Key
       ec2_key:
         name: vprokey
-        region: "{{region}}"
+        region: "{{ region }}"
       register: vprokey_out
 
     - name: Save Private kay into file loginkey_vpro.pem
       copy:
-        content: "{{vprokey_out.key.private_key}}"
+        content: "{{ vprokey_out.key.private_key }}"
         dest: "./loginkey_vpro.pem"
         mode: 0600
       when: vprokey_out.changed
@@ -25,9 +27,9 @@
     - name: Create Security Group for Load Balancer
       ec2_group:
         name: vproELB-sg
-        describtion: Allow port 80 from everywhere and all port within sg
-        region: "{{region}}"
-        vpc_id: "{{vpcid}}"
+        description: Allow port 80 from everywhere and all port within sg
+        region: "{{ region }}"
+        vpc_id: "{{ vpcid }}"
         rules:
           - proto: tcp
             from_port: 80
@@ -39,29 +41,28 @@
       ec2_group:
         name: vproStack-sg
         description: Allow port 22 from everywhere and all port within sg
-        region: "{{region}}"
-        vpc_id: "{{vpc_id}}"
+        region: "{{ region }}"
+        vpc_id: "{{ vpc_id }}"
         purge_rules: no
-        rule:
-         - proto: tcp
-           from_port: 80
-           to_port: 80
-           group_id: "{{vproELBSG_out.group_id}}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            group_id: "{{ vproELBSG_out.group_id }}"
 
-         - proto: tcp
-           from_port: 22
-           to_port: 22
-           group_id: "{{BastionSGid}}"
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            group_id: "{{ BastionSGid }}"
       register: vproStackSG_out
+
     - name: Update Security Group with its own sg id
       ec2_group:
         name: vproStack-sg
-        description: Allow port 22 from Everywhere and all port within sg
-        region: "{{region}}"
-        vpc_id: "{{vpc_id}}"
+        description: Allow port 22 from everywhere and all port within sg
+        region: "{{ region }}"
+        vpc_id: "{{ vpc_id }}"
         purge_rules: no
         rules:
           - proto: all
-            group_id: "{{vproStackSG_out.group_id}}"
-
-
+            group_id: "{{ vproStackSG_out.group_id }}"
