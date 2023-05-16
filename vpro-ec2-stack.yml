@@ -191,9 +191,9 @@
           - protocol: http
             load_balancer_port: 80
             instance_port: 80
-    - name: Insert/Update Hosts IP & Name in file provision-stack/group_vars/hostsip
+    - name: Insert/Update Hosts IP & Name in file provision_stack/group_vars/hostsip
       blockinfile:
-        path: provision-stack/group/vars/hostip
+        path: provision_stack/group_vars/hostsip
         block: |
           web01_ip: {{web01_out.tagged_instance[0].private_ip}}
           app01_ip: {{app01_out.tagged_instance[0].private_ip}}
